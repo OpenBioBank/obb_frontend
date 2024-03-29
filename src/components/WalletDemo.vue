@@ -216,9 +216,27 @@ function selectContract() {}
   background: green;
 }
 
-.walletDemo button:nth-child(2) {
+.walletDemo button:nth-child(4) {
   width: 100px;
   height: 100px;
   background: red;
+}
+
+.walletDemo button:nth-child(7) {
+  width: 100px;
+  height: 100px;
+  background: yellow;
+}
+
+.walletDemo button:nth-child(10) {
+  width: 100px;
+  height: 100px;
+  background: blue;
+}
+
+.walletDemo button:nth-child(13) {
+  width: 100px;
+  height: 100px;
+  background: purple;
 }
 </style>
