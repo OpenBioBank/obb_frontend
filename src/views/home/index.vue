@@ -65,7 +65,7 @@ const onSubmit = () => {
   position: absolute;
   width: 100%;
   height: 100%;
-  filter: blur(100px);
+  filter: blur(50px);
   background: inherit;
   z-index: -1;
   background: linear-gradient(90deg, #000000 0%, #482700 100%);
@@ -77,7 +77,7 @@ const onSubmit = () => {
   bottom: 0;
   width: 150px;
   height: 150px;
-  filter: blur(70px);
+  filter: blur(50px);
   z-index: 9;
   background: linear-gradient(90deg, #000000 0%, #9c6e34 100%);
 }
@@ -88,7 +88,7 @@ const onSubmit = () => {
   bottom: 0;
   width: 150px;
   height: 150px;
-  filter: blur(70px);
+  filter: blur(50px);
   background: inherit;
   z-index: 9;
   background: linear-gradient(90deg, #000000 0%, #9c6e34 100%);
