@@ -1,5 +1,5 @@
 <template>
-  <div class="px-100px mt-30px pb-100px">
+  <div class="px-180px mt-30px pb-100px">
     <el-page-header @back="goBack">
       <template #content>
         <span class="text-large font-600 mr-3"> {{route.query.type}} All </span>
@@ -31,7 +31,8 @@
         </el-radio-button>
       </el-radio-group>
     </div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" row-class-name='text-[#000] font-500'
+      header-row-class-name='text-[#000] font-500'>
       <el-table-column type="index"></el-table-column>
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">

@@ -16,27 +16,42 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
+      meta:{
+        keepAlive:true
+      }
     },
     {
       path: '/supplier',
       name: 'supplier',
-      component: Supplier
+      component: Supplier,
+      meta:{
+        keepAlive:true
+      }
     },
     {
       path: '/buyer',
       name: 'buyer',
-      component: Buyer
+      component: Buyer,
+      meta:{
+        keepAlive:true
+      }
     },
     {
       path: '/buyer/all',
       name: 'BuyerAll',
-      component: BuyerAll
+      component: BuyerAll,
+      meta:{
+        keepAlive:true
+      }
     },
     {
       path: '/buyer/details',
       name: 'BuyerDetails',
-      component: BuyerDetails
+      component: BuyerDetails,
+      meta:{
+        isKeepAlive:true
+      }
     },
     {
       path: '/wallet',

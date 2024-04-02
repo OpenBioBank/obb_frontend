@@ -6,6 +6,10 @@ export default defineConfig({
   extract: {
     include: ['src/**/*.{html,vue,jsx,tsx,svelte}']
   },
+  plugins: [
+    require('windicss/plugin/filters'),
+  ],
+  
   shortcuts: {
     'flex-center': 'flex justify-center items-center',
     'flex-x-center': 'flex justify-center',

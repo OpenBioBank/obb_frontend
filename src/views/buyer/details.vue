@@ -1,29 +1,65 @@
 <template>
-  <div class="px-100px mt-30px pb-100px">
+  <div class="px-180px mt-30px pb-100px">
     <el-page-header @back="goBack">
       <template #content>
         <span class="text-large font-600 mr-3"> Details Page </span>
       </template>
     </el-page-header>
     <el-divider />
-    <div class="flex-between-c px-100px py-30px">
-      <div class="bg-img-base w-500px h-500px rounded-12px"
-        :style="`background-image:url('${info.img}')`">
+    <div class="flex py-30px">
+      <div class="border-0.5px border-solid border-[#000] rounded-4px">
+        <div class="p-6px flex-between-c">
+          <img class="w-15px h-15px mr-8px" src="@/assets/image/logo.png" alt="">
+          <span class="flex-y-center text-10px cursor-pointer">
+            <span class="mr-4px">16</span>
+            <el-icon class="mr-4px">
+              <Star />
+            </el-icon>
+          </span>
+        </div>
+        <div class="bg-img-base w-300px h-300px" :style="`background-image:url('${info.img}')`">
+        </div>
       </div>
-      <div class="flex-1 ml-50px self-start p-20px">
-        <p class="text-30px font-500 mb-20px">{{info.name}}</p>
-        <p class="text-18px leading-26px">{{info.desc}}</p>
-        <div class="my-20px">
+      <div class="ml-20px self-start p-20px w-321px">
+        <p class="text-11px text-[#FFB500] leading-15px">CrypToadz by YUANER</p>
+        <p class="text-12px font-500 leading-17px mt-7px mb-3px">{{info.name}}</p>
+        <p class="text-11px leading-26px leading-15px">{{info.desc}}</p>
+        <div class="flex text-9px leading-13px mt-10px">
+          <span class="flex-y-center mr-12px">
+            <el-icon class="mr-4px">
+              <View />
+            </el-icon>
+            100 views
+          </span>
+          <span class="flex-y-center">
+            <el-icon class="mr-4px">
+              <Star />
+            </el-icon>
+            16 favorites
+          </span>
+        </div>
+        <!-- <div class="my-20px">
           <p class="mb-10px font-bold">Current Price</p>
           <p class="text-20px font-bold">${{info.price}}</p>
+        </div> -->
+
+        <div class="button-border border-[#979797] rounded-4px bg-[#000000] bg-opacity-2 mt-20px">
+          <div class="p-10px">
+            Sale ends 2/4/2024 at 5:18.P.M
+          </div>
+
+          <div class="p-10px top-border border-[#979797]">
+            <div class="">
+              <p class="text-10px text-[#000] opacity-65">Current Price</p>
+              <p class="text-12px text-[#000] leading-18px mt-4px font-600">${{info.price}}</p>
+            </div>
+            <div
+              class="button-border border-[#000] mt-8px bg-[#FFB500] rounded-6px text-[#fff] text-26px py-10px font-bold w-198px h-24px flex-center cursor-pointer text-12px text-[#000]">
+              Buy Now
+            </div>
+          </div>
         </div>
-        <div
-          class="bg-[#409EFE] rounded-6px text-[#fff] text-26px py-10px font-bold px-100px w-auto inline-block cursor-pointer">
-          <el-icon size='30px'>
-            <ShoppingCart />
-          </el-icon>
-          <span class="items-start ml-20px relative -top-5px">Buy Now</span>
-        </div>
+
       </div>
     </div>
   </div>
@@ -31,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ShoppingCart } from '@element-plus/icons-vue'
+import { ShoppingCart, View, Star } from '@element-plus/icons-vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()

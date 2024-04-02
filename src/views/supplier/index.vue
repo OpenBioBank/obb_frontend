@@ -1,5 +1,5 @@
 <template>
-  <div class="px-100px mt-30px">
+  <div class="px-180px pb-60px mt-30px supplier flex-1 overflow-auto">
     <div class="flex-between">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="keyword">
@@ -23,17 +23,18 @@
       </el-form>
       <el-button class="w-150px" type="primary" @click="onSubmit">Add</el-button>
     </div>
-    <el-table border :data="tableData" style="width: 100%">
-      <el-table-column label="Date" prop="date" />
-      <el-table-column label="Category" prop="category" />
-      <el-table-column label="Desc" prop="desc" />
-      <el-table-column align="right" label="Operations" fixed="right" width="180">
+    <el-table :data="tableData" style="width: 100%" row-class-name='text-[#000] font-500'
+      header-row-class-name='text-[#000] font-500'>
+      <el-table-column type="index"></el-table-column>
+      <el-table-column label="Collection" prop="desc">
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-          <el-button size="small" type="danger"
-            @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+          <img :src="scope.row.img" class="w-70px h-70px rounded-6px" alt="">
         </template>
       </el-table-column>
+      <el-table-column label="Category" prop="category" />
+      <el-table-column label="Desc" prop="desc" />
+      <el-table-column label="Price" prop="price" />
+      <el-table-column label="Owners" prop="owners" />
     </el-table>
     <el-pagination class="mt-20px" v-model:current-page="currentPage" v-model:page-size="pageSize"
       :page-sizes="[100, 200, 300, 400]" :small="small" :disabled="disabled"
@@ -123,24 +124,63 @@ const options: any[] = [
 ]
 const tableData: any[] = [
   {
+    infoTotal: 400,
     date: '2016-05-03',
     category: 'urine',
     desc: 'xxxx xxx',
+    price: 20,
+    gatherImg:
+      'https://i.seadn.io/gae/3hqgtmgLMJXSmKT6SILdYaeXCNy_eAeqqdH9l_Xc1wqjSf0J2F1AwbMf-rizYrzrFvUGdyGsNYUizclsYCwcan5ass3-X3wz2NlhFEo?auto=format&dpr=1&h=500&fr=1',
+    img: 'https://i.seadn.io/s/raw/files/64f5dd9d1860435dac4448c3e59f3ea2.png?auto=format&dpr=1&w=128',
+    owners: '2000',
   },
   {
+    infoTotal: 123,
     date: '2016-05-02',
     category: 'saliva',
     desc: 'xxxx xxx',
+    price: 20,
+    gatherImg:
+      'https://i.seadn.io/s/raw/files/6e725e68619c97f6b98a3cc6204f5d60.jpg?auto=format&dpr=1&h=500&fr=1',
+    img: 'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?auto=format&dpr=1&w=128',
+    owners: '2000',
   },
   {
+    infoTotal: 570,
     date: '2016-05-04',
     category: 'hair',
     desc: 'xxxx xxx',
+    price: 20,
+    gatherImg:
+      'https://i.seadn.io/gae/3hqgtmgLMJXSmKT6SILdYaeXCNy_eAeqqdH9l_Xc1wqjSf0J2F1AwbMf-rizYrzrFvUGdyGsNYUizclsYCwcan5ass3-X3wz2NlhFEo?auto=format&dpr=1&h=500&fr=1',
+    img: 'https://i.seadn.io/s/raw/files/64f5dd9d1860435dac4448c3e59f3ea2.png?auto=format&dpr=1&w=128',
+    owners: '2000',
   },
   {
+    infoTotal: 8000,
     date: '2016-05-01',
     category: 'blood',
     desc: 'xxxx xxx',
+    price: 20,
+    gatherImg:
+      'https://i.seadn.io/s/raw/files/6e725e68619c97f6b98a3cc6204f5d60.jpg?auto=format&dpr=1&h=500&fr=1',
+    img: 'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?auto=format&dpr=1&w=128',
+    owners: '2000',
+  },
+  {
+    infoTotal: 8000,
+    date: '2016-05-01',
+    category: 'blood',
+    desc: 'xxxx xxx',
+    price: 20,
+    gatherImg:
+      'https://i.seadn.io/s/raw/files/6e725e68619c97f6b98a3cc6204f5d60.jpg?auto=format&dpr=1&h=500&fr=1',
+    img: 'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?auto=format&dpr=1&w=128',
+    owners: '2000',
   },
 ]
 </script>
+<style lang="less">
+</style>
+<style lang="less" scoped>
+</style>

@@ -1,41 +1,24 @@
 <template>
-  <div class="h-full flex flex-col">
-    <div
-      :style="`background-image:url('https://img.b2bpic.net/premium-photo/man-wearing-virtual-reality-headset-interacting-with-futuristic-user-interface-he-is-surrounded-by-glowing-blue-lines-symbols_14117-31972.jpg')`"
-      class="w-full bg-cover bg-no-repeat bg-center min-h-full flex-center flex-col items-start text-[#ffff] px-100px">
-      <h2 class="text-[34px]  font-800 mb-20px">About OPEN BIOBANK</h2>
-      <p class="text-18px leading-32px font-600">Discover OPEN BIOBANK, a leading company in the
-        Biotechnology, Gene, and Blockchain industry.</p>
-    </div>
-    <div class="px-100px mt-50px flex flex-col items-center">
-      <h2 class="text-[34px]  font-800 mb-20px">Contact Us</h2>
-      <p class="text-18px leading-32px font-600">Reach out to us! We're here to help with all your
-        biotech needs.</p>
-      <el-form label-position="top" :model="form" label-width="auto"
-        class="mt-20px w-400px flex flex-col">
-        <el-form-item label="Name" required>
-          <el-input v-model="form.name" />
-        </el-form-item>
-        <el-form-item label="Subject" required>
-          <el-input v-model="form.subject" />
-        </el-form-item>
-        <el-form-item label="Email" required>
-          <el-input v-model="form.email" />
-        </el-form-item>
-        <el-form-item label="Phone number">
-          <el-input v-model="form.phone" />
-        </el-form-item>
-        <el-form-item label="Message" required>
-          <el-input v-model="form.message" :rows="4" type="textarea" />
-        </el-form-item>
-        <el-button type="primary" @click="onSubmit">Let's
-          Talk</el-button>
-      </el-form>
-    </div>
-    <div class="bg-[#083344]  px-300px  py-50px  mt-100px text-[#ffff]  font-bold">
-      <div class="flex-around">
+  <div class="flex-1 flex flex-col overflow-auto  bg-gradient-to-r from-[#000] to-[#000]">
+    <main class="flex-between-c text-[#fff] flex-1  px-180px">
+      <div>
+        <img class="w-180px h-84px mt-8px mb-12px" src="@/assets/image/logo_name2.png" alt="">
+        <p class="mt-16px mb-27px leading-17px">Discover OPEN BIOBANK, <br>a leading company in the
+          Biotechnology, Gene, and Blockchain industry</p>
+        <div
+          class=" cursor-pointer bg-[#FFB500] rounded-12px w-84px h-24px text-11px flex-center text-[#000]">
+          CONNECT</div>
+      </div>
+      <div class="w-305px h-305px  blur-sm ">
+        <img class=" w-200px h-214px mt-8px mb-12px" src="@/assets/image/logo_drug.png" alt="">
+      </div>
+
+    </main>
+    <footer class="text-[#ffff]  footer-content relative px-180px py-16px">
+      <div class="flex-between">
         <div>
-          <p class="font-900 text-20px">Media</p>
+          <p class="font-500 text-20px">Media</p>
+          <img class="w-136px h-33px mt-8px mb-12px" src="@/assets/image/logo_name.png" alt="">
           <div class="flex-y-center mt-10px">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 20 20">
               <path fill="currentColor"
@@ -59,12 +42,12 @@
           </div>
         </div>
         <div>
-          <p class="font-900 text-20px">Menu</p>
+          <p class="font-500 text-20px">Menu</p>
           <p class="mt-10px">About Us</p>
         </div>
       </div>
-      <p class="text-center mt-20px">Copyright © 2023 - PRESENT </p>
-    </div>
+      <p class="text-center mt-20px">Copyright © 2024 </p>
+    </footer>
   </div>
 </template>
 
@@ -72,15 +55,42 @@
 import { reactive } from 'vue'
 import { Icon } from '@iconify/vue'
 
-const form = reactive({
-  name: '',
-  subject: '',
-  email: '',
-  phone: '',
-  message: '',
-})
-
 const onSubmit = () => {
   console.log('submit!')
 }
 </script>
+<style lang="less" scoped>
+.blur-sm::before {
+  content: ' ';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  filter: blur(100px);
+  background: inherit;
+  z-index: -1;
+  background: linear-gradient(90deg, #000000 0%, #482700 100%);
+}
+.footer-content::before {
+  content: ' ';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 150px;
+  height: 150px;
+  filter: blur(70px);
+  z-index: 9;
+  background: linear-gradient(90deg, #000000 0%, #9c6e34 100%);
+}
+.footer-content::after {
+  content: ' ';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 150px;
+  height: 150px;
+  filter: blur(70px);
+  background: inherit;
+  z-index: 9;
+  background: linear-gradient(90deg, #000000 0%, #9c6e34 100%);
+}
+</style>

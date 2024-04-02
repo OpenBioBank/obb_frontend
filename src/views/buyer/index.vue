@@ -1,5 +1,5 @@
 <template>
-  <div class="px-100px mt-30px pb-100px">
+  <div class="px-180px mt-30px pb-100px flex-1 overflow-auto">
     <div class="flex-between-c">
       <el-radio-group v-model="tabPosition" style="margin-bottom: 30px">
         <el-radio-button value="gather">Gather</el-radio-button>
@@ -28,8 +28,9 @@
         </div>
       </div>
     </div>
-    <el-table v-else :data="tableData" style="width: 100%" row-class-name='cursor-pointer'
-      @row-click="goDetails">
+    <el-table v-else :data="tableData" style="width: 100%"
+      row-class-name='cursor-pointer text-[#000] font-500'
+      header-row-class-name='text-[#000] font-500' @row-click="goDetails">
       <el-table-column type="index"></el-table-column>
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">
