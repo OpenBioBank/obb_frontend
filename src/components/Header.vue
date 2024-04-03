@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-gradient-to-r from-[#000] to-[#000] flex-between h-44px flex-y-center items-center px-180px shadow-xl fixed top-0 left-0 w-full bg-[#fff] z-99">
+    class="header-wrap bg-gradient-to-r from-[#000] to-[#000] flex-between h-60px flex-y-center items-center px-180px shadow-xl fixed top-0 left-0 w-full bg-[#fff] z-99">
     <div class="text-[30px] font-bold pr-20px mr-20px self-center flex items-center">
       <img class="w-27px h-25px rounded-6px mr-8px" src="@/assets/image/logo.png" alt="">
       <img class="w-107px h-17px rounded-6px mr-10px" src="@/assets/image/web_name.png" alt="">
@@ -11,13 +11,9 @@
         :class="[{'opacity-100':activeIndex === idx}]">
         {{ nav.name }}
       </div>
-      <div
-        class="cursor-pointer flex-y-center border-1 border-solid opacity-65 border-[#979797] rounded-4px text-[#fff] text-10px h-20px px-4px font-bold leading-20px">
-        <el-icon class="mr-5px">
-          <Wallet />
-        </el-icon>
-        Connect
-      </div>
+      <WalletMultiButton :dark="true">
+
+      </WalletMultiButton>
 
     </div>
   </div>
@@ -27,6 +23,7 @@
 import { reactive, ref } from 'vue'
 import { Wallet } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
+import { WalletMultiButton } from 'solana-wallets-vue'
 
 const router = useRouter()
 // const activeIndex = ref('/home')
@@ -50,5 +47,12 @@ const navHandle = (idx: number) => {
   router.push({ path: navs[idx].path })
 }
 </script>
+<style lang="less">
+.header-wrap {
+  .swv-button {
+    height: 38px;
+  }
+}
+</style>
 <style lang="less" scoped>
 </style>

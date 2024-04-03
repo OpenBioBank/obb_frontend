@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper w-full h-full pt-44px flex flex-col">
+  <div class="wrapper w-full h-full pt-60px flex flex-col">
     <Header></Header>
 
     <router-view v-slot="{ Component,route }">

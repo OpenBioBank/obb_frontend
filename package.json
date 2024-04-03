@@ -11,12 +11,14 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.91.2",
     "axios": "^1.6.8",
     "element-plus": "^2.6.3",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
     "pinia": "^2.1.7",
+    "solana-wallets-vue": "^0.6.1",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"

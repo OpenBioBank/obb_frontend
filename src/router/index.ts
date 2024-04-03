@@ -5,6 +5,7 @@ import Supplier from '@/views/supplier/index.vue'
 import Buyer from '@/views/buyer/index.vue'
 import BuyerAll from '@/views/buyer/all.vue'
 import BuyerDetails from '@/views/buyer/details.vue'
+import { useWallet } from 'solana-wallets-vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,7 +27,8 @@ const router = createRouter({
       name: 'supplier',
       component: Supplier,
       meta:{
-        keepAlive:true
+        keepAlive:true,
+        needLogin:true,
       }
     },
     {
@@ -34,7 +36,8 @@ const router = createRouter({
       name: 'buyer',
       component: Buyer,
       meta:{
-        keepAlive:true
+        keepAlive:true,
+        needLogin:true,
       }
     },
     {
@@ -42,7 +45,8 @@ const router = createRouter({
       name: 'BuyerAll',
       component: BuyerAll,
       meta:{
-        keepAlive:true
+        keepAlive:true,
+        needLogin:true,
       }
     },
     {
@@ -50,7 +54,8 @@ const router = createRouter({
       name: 'BuyerDetails',
       component: BuyerDetails,
       meta:{
-        isKeepAlive:true
+        isKeepAlive:true,
+        needLogin:true,
       }
     },
     {
@@ -60,5 +65,12 @@ const router = createRouter({
     }
   ]
 })
+router.beforeEach((to, from) => {
+  const { wallets,wallet,publicKey } = useWallet();
+  // if(from?.meta?.needLogin && !publicKey.value){
 
+  //   return false
+  // }
+  return true
+})
 export default router
