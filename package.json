@@ -13,6 +13,8 @@
   "dependencies": {
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.91.2",
+    "borsh": "^0.7.0",
+    "buffer": "^6.0.3",
     "axios": "^1.6.8",
     "element-plus": "^2.6.3",
     "less": "^4.2.0",
