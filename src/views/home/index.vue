@@ -5,9 +5,9 @@
         <img class="w-180px h-84px mt-8px mb-12px" src="@/assets/image/logo_name2.png" alt="">
         <p class="mt-16px mb-27px leading-17px">Discover OPEN BIOBANK, <br>a leading company in the
           Biotechnology, Gene, and Blockchain industry</p>
-        <div
+        <!-- <div
           class=" cursor-pointer bg-[#FFB500] rounded-12px w-84px h-24px text-11px flex-center text-[#000]">
-          CONNECT</div>
+          CONNECT</div> -->
       </div>
       <div class="w-305px h-305px  blur-sm ">
         <img class=" w-200px h-214px mt-8px mb-12px" src="@/assets/image/logo_drug.png" alt="">

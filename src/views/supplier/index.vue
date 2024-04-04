@@ -1,5 +1,5 @@
 <template>
-  <div  class="px-180px pb-60px mt-30px supplier flex-1 overflow-auto">
+  <div class="px-180px pb-60px mt-30px supplier flex-1 overflow-auto">
     <div class="flex-between">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="keyword">
@@ -18,7 +18,7 @@
             clearable />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">Query</el-button>
+          <el-button type="primary" @click="onSearch">Query</el-button>
         </el-form-item>
       </el-form>
       <el-button class="w-150px" type="primary" @click="onSubmit">Add</el-button>
@@ -29,7 +29,8 @@
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">
           <div class='grid grid-cols-4 grid-rows-4 w-80px h-80px rounded-6px overflow-hidden'>
-            <div :style="`background:${color}`" v-for="(color,idx) in scope.row.colorList" :key="color" :class="`w-20px h-20px`">
+            <div :style="`background:${color}`" v-for="(color,idx) in scope.row.colorList"
+              :key="color" :class="`w-20px h-20px`">
             </div>
           </div>
           <!-- <img :src="scope.row.img" class="w-70px h-70px rounded-6px" alt=""> -->
@@ -45,7 +46,8 @@
       layout="total, sizes, prev, pager, next, jumper" :total="total"
       @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
-  <el-dialog @closed="closed" :destroy-on-close="true" v-model="dialogFormVisible" title="add info" width="600">
+  <el-dialog @closed="closed" :destroy-on-close="true" v-model="dialogFormVisible" title="add info"
+    width="600">
     <el-form ref="ruleFormRef" label-width='150px' class="px-20px" :model="form" :rules="rules"
       label-position="right">
 
@@ -66,18 +68,21 @@
       <el-form-item label="Detection coding" prop="detectionNum">
         <el-input v-model="form.detectionNum" />
       </el-form-item>
-      <!-- <el-form-item label="Message" required>
-        <el-input v-model="form.desc" :rows="4" type="textarea" />
-      </el-form-item> -->
       <el-form-item label="Attachments" prop="fileList">
-        <el-upload v-model:file-list="form.fileList" class="upload-demo"
-           multiple 
-           :limit="1"
-           action="#"
-           :auto-upload="false"
-          :on-preview="handlePreview" :on-remove="handleRemove">
-          <el-button type="primary">Click to upload</el-button>
-        </el-upload>
+        <div>
+          <el-upload v-model:file-list="form.fileList" class="upload-demo" multiple :limit="1"
+            action="#" :auto-upload="false" :on-preview="handlePreview" :on-remove="handleRemove">
+            <el-button type="primary">Click to upload</el-button>
+          </el-upload>
+          <!-- <div>
+            <p>Sample file</p>
+            <div>
+              <el-icon>
+                <Document />
+              </el-icon>
+            </div>
+          </div> -->
+        </div>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -92,19 +97,23 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage,ElLoading } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
+import { Document } from '@element-plus/icons-vue'
 
 import type { UploadProps, UploadUserFile } from 'element-plus'
+import API from '@/api/index'
 
-import API from '@/api/index.ts'
+import { useWallet } from 'solana-wallets-vue'
+const { publicKey } = useWallet()
 const currentPage = ref(4)
 const pageSize = ref(100)
 const total = ref(0)
 const small = ref(false)
 const disabled = ref(false)
-const dialogFormVisible = ref(false)
+const dialogFormVisible = ref(true)
+onMounted(() => {})
 const tableData: any[] = reactive([
   {
     infoTotal: 400,
@@ -166,67 +175,65 @@ const closed = () => {
     category: '',
     detectionNum: '',
     institution: '',
-    fileList:[],
+    fileList: [],
   })
 }
 const confirm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-   await formEl.validate(async (valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
       const loadingInstance = ElLoading.service({ fullscreen: true })
-      const {status,code,data} = await API.sampleCollection({
+      const { status, code, data } = await API.sampleCollection({
         sampleType: form.category,
         manufacturer: form.institution,
         code: form.detectionNum,
         files: form.fileList[0].raw,
       })
       loadingInstance.close()
-      if(code === 200){
+      if (code === 200) {
         dialogFormVisible.value = false
         ElMessage({
           message: 'Add success',
           type: 'success',
         })
         nftImgHandle(data)
-      }else{
+      } else {
         ElMessage.error('Add failure')
       }
-      
     } else {
       console.log('error submit!', fields)
     }
   })
 }
-const randomColor = (val:string):string => {
-    let suffix = ''
-    switch (val) {
-      case "A":
-        suffix = '1'
-        break;
-      case "G":
+const randomColor = (val: string): string => {
+  let suffix = ''
+  switch (val) {
+    case 'A':
+      suffix = '1'
+      break
+    case 'G':
       suffix = '2'
-        break;
-      case "C":
+      break
+    case 'C':
       suffix = '3'
-        break;
-      case "T":
+      break
+    case 'T':
       suffix = '4'
-        break;
-    
-      default:
-        break;
-    } 
-    let random = Math.random()
-    if(random === 0) {
-        return randomColor(val)
-    }
-    return '#' + random.toString(16).substring(2,7) + suffix
+      break
+
+    default:
+      break
+  }
+  let random = Math.random()
+  if (random === 0) {
+    return randomColor(val)
+  }
+  return '#' + random.toString(16).substring(2, 7) + suffix
 }
 
-const nftImgHandle = (data:any) => {
-  
+const nftImgHandle = (data: any) => {
   const agct = data.agct
-  const colorList = agct.split('').map((i:string) => randomColor(i))
+  const colorList = agct.split('').map((i: string) => randomColor(i))
   data.colorList = colorList
   tableData.unshift(data)
 }
@@ -250,7 +257,22 @@ let form = reactive({
   fileList: ref<UploadUserFile[]>([]),
 })
 
+const validWallet = () => {
+  if (!publicKey.value) {
+    ElMessage({
+      message: 'Please connect wallet',
+      type: 'warning',
+    })
+    return false
+  }
+  return true
+}
+
+const onSearch = () => {
+  if (!validWallet()) return
+}
 const onSubmit = () => {
+  if (!validWallet()) return
   dialogFormVisible.value = true
 }
 const handleSizeChange = (val: number) => {
@@ -269,20 +291,20 @@ const handleDelete = (index: number, row: any) => {
 }
 const options: any[] = [
   {
-    label: 'urine',
-    value: 'urine',
+    label: 'Bacteria',
+    value: 'Bacteria',
   },
   {
-    label: 'saliva',
-    value: 'saliva',
+    label: 'Fungi',
+    value: 'Fungi',
   },
   {
-    label: 'hair',
-    value: 'hair',
+    label: 'Phages',
+    value: 'Phages',
   },
   {
-    label: 'blood',
-    value: 'blood',
+    label: 'Viruses',
+    value: 'Viruses',
   },
 ]
 const institutionOptions: any[] = [
@@ -295,7 +317,6 @@ const institutionOptions: any[] = [
     value: 'manufacturer',
   },
 ]
-
 </script>
 <style lang="less">
 </style>
