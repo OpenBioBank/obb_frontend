@@ -39,7 +39,7 @@ instance.interceptors.response.use((response:any) => {
   return Promise.reject(error)
 })
 
-export const get = (url: string, params: object) => {
+export const get = (url: string, params?: object) => {
   return instance.get(url, {
     params
   }).then(response => {
