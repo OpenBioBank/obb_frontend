@@ -47,7 +47,7 @@ import {
 // const rpc =
 //   "https://solana-mainnet.g.alchemy.com/v2/vzFXAOxlxQoAAKZPr9qrVc29rB4HGOJp";
 // solana devnet rpc
-const rpc ="https://solana-devnet.g.alchemy.com/v2/OLI1XL9pAdLjtvpt06bqBfdbsdODRn_Y";
+const rpc = "https://solana-devnet.g.alchemy.com/v2/OLI1XL9pAdLjtvpt06bqBfdbsdODRn_Y";
 const connection = new Connection(rpc, "confirmed");
 
 // solana Browser plugin wallet
@@ -107,7 +107,7 @@ const phantom = getProvider();
 // 合约地址
 //const programId = new PublicKey(nftAddress);
 const programIdV2 = new PublicKey(nftAddressV2);
-console.log("programIdV2: ",programIdV2)
+console.log("programIdV2: ", programIdV2)
 // 创建合约对象
 // const program = new Program(NftAbi, programId, phantom);
 // console.log("program:  ", program);
@@ -125,7 +125,7 @@ function walletOperate() {
     var connect_wallet = phantom.connect();
 
     // 连接后
-    phantom.on("connect", async (publicKey) => {
+    phantom.on("connect", async (publicKey: any) => {
       // 检查连接
       console.log("Phantom已连接: " + phantom.isConnected);
 
@@ -143,11 +143,11 @@ function walletOperate() {
     });
 
     // 切换钱包
-    phantom.on("accountChanged", (publicKey) => {
+    phantom.on("accountChanged", (publicKey: { toBase58: () => any; }) => {
       if (publicKey) {
         console.log(`Switched to account ${publicKey.toBase58()}`);
       } else {
-        phantom.connect().catch((error) => {
+        phantom.connect().catch((error: any) => {
           console.log(error);
         });
       }
@@ -206,153 +206,225 @@ async function sign() {
 }
 
 // 调用合约
-async function callContract() {
-  try {
-    // 构建交易
-    //const instruction = new TransactionInstruction({
-    //   keys: [{ pubkey: phantom.publicKey, isSigner: true, isWritable: true }],
-    //   programId: new PublicKey(contractAddress), // 替换为你的程序ID
-    //   data: Buffer.from([]), // 替换为你的合约调用数据
-    // });
+// async function callContract() {
+//   try {
+//     // 构建交易
+//     //const instruction = new TransactionInstruction({
+//     //   keys: [{ pubkey: phantom.publicKey, isSigner: true, isWritable: true }],
+//     //   programId: new PublicKey(contractAddress), // 替换为你的程序ID
+//     //   data: Buffer.from([]), // 替换为你的合约调用数据
+//     // });
 
-    // const transaction = new Transaction().add(instruction);
-    // transaction.feePayer = phantom.publicKey;
-    // // 签名并广播交易
-    // await phantom.signAndSendTransaction(transaction);
+//     // const transaction = new Transaction().add(instruction);
+//     // transaction.feePayer = phantom.publicKey;
+//     // // 签名并广播交易
+//     // await phantom.signAndSendTransaction(transaction);
 
-    // let ix = new TransactionInstruction({
-    //       programId: program.publicKey,
-    //       keys: [
-    //             { pubkey: mintKeypair.publicKey, isSigner: true, isWritable: true },            // initializer
-    //             { pubkey: mintKeypair.publicKey, isSigner: true, isWritable: true },            // token_mint
-    //             { pubkey: payer.publicKey, isSigner: false, isWritable: true },                 // Mint authority account
-    //             { pubkey: TOKEN_METADATA_PROGRAM_ID, isSigner: false, isWritable: false },      // Token metadata program
-    //             { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },        // System program
-    //             { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },               // Token program
-    //             { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },             // Rent account            
-    //         ],
-          
-    //       data: instructionData.toBuffer()
-    //     });
+//     // let ix = new TransactionInstruction({
+//     //       programId: program.publicKey,
+//     //       keys: [
+//     //             { pubkey: mintKeypair.publicKey, isSigner: true, isWritable: true },            // initializer
+//     //             { pubkey: mintKeypair.publicKey, isSigner: true, isWritable: true },            // token_mint
+//     //             { pubkey: payer.publicKey, isSigner: false, isWritable: true },                 // Mint authority account
+//     //             { pubkey: TOKEN_METADATA_PROGRAM_ID, isSigner: false, isWritable: false },      // Token metadata program
+//     //             { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },        // System program
+//     //             { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },               // Token program
+//     //             { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },             // Rent account            
+//     //         ],
 
-    // 以下方法会Error: This function requires 'Provider.sendAndConfirm' to be implemented.
-    // const instruction = await program.methods
-    //   .mintTo()
-    //   .accounts({
-    //     payer: phantom.publicKey,
-    //     tokenAccount:  new PublicKey("2Uar6SX4PnvzwwANVnP6vSGHTmZZjxLa25sXbmvKPBg8"),
-    //     owner: phantom.publicKey,
-    //     mint: phantom.publicKey,
-    //     associatedTokenProgram: new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
-    //     systemProgram: SystemProgram.programId,
-    //     tokenProgram: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
-    //   })
-    //   .instruction();
+//     //       data: instructionData.toBuffer()
+//     //     });
 
-
-    const instructionData = new InitializeTokenMintArgs({
-            instruction: 0,
-            id: new BN(1),
-            description: "this is a nft",
-            owner: phantom.publicKey,
-            creator: phantom.publicKey,
-            authorize: false,
-            url: "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/nft.json",
-            cid: new BN(1).toString(),
-            is_mutable: false
-        });
+//     // 以下方法会Error: This function requires 'Provider.sendAndConfirm' to be implemented.
+//     // const instruction = await program.methods
+//     //   .mintTo()
+//     //   .accounts({
+//     //     payer: phantom.publicKey,
+//     //     tokenAccount:  new PublicKey("2Uar6SX4PnvzwwANVnP6vSGHTmZZjxLa25sXbmvKPBg8"),
+//     //     owner: phantom.publicKey,
+//     //     mint: phantom.publicKey,
+//     //     associatedTokenProgram: new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'),
+//     //     systemProgram: SystemProgram.programId,
+//     //     tokenProgram: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
+//     //   })
+//     //   .instruction();
 
 
-    let PDA;
-    PDA = await getPDA();
-    console.log("PDA: ",PDA)
-
-    let instruction = new TransactionInstruction({
-            programId: new PublicKey(nftAddressV2),
-            keys: [
-                { pubkey: phantom.publicKey, isSigner: true, isWritable: true },        // Initializer     
-                { pubkey: phantom.publicKey, isSigner: true, isWritable: true },         // token_mint      
-                { pubkey: phantom.publicKey, isSigner: true, isWritable: false },             // mint_auth             
-                { pubkey: new PublicKey(PDA), isSigner: false, isWritable: true },     // token_metadata     
-                { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },        // System program  
-                { pubkey: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'), isSigner: false, isWritable: false },       // token_program      
-                { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },      // sysvar_rent
-            ],    
-            data: Buffer.from([instructionData])
-        });
-
-       
-
-    const transaction = new Transaction().add(instruction);
-
-    const anyTransaction: any = transaction;
-    // 获取最近的区块交易哈希
-    anyTransaction.recentBlockhash = (
-      await connection.getLatestBlockhash()
-    ).blockhash;
-
-    transaction.feePayer = phantom.publicKey;
-
-    // 签名并广播交易
-    const { signature } = await phantom.signAndSendTransaction(transaction);
-
-    // 获取交易签名
-    await connection.getSignatureStatus(signature);
-    
-  } catch (error) {
-    console.log(error);
-    throw new Error(error.message);
-  }
-}
-  
-class Assignable {
-    constructor(properties) {
-        Object.keys(properties).map((key) => {
-            return (this[key] = properties[key]);
-        });
-    };
-};
+//     const instructionData = new InitializeTokenMintArgs({
+//             methods: 0,
+//             id: new BN(1),
+//             description: "this is a nft",
+//             owner: phantom.publicKey,
+//             creator: phantom.publicKey,
+//             authorize: false,
+//             url: "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/nft.json",
+//             cid: "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/nft.json",
+//             is_mutable: false
+//         });
 
 
-class InitializeTokenMintArgs extends Assignable {
-    toBuffer() {
-        return Buffer.from(borsh.serialize(InitializeTokenMintArgsSchema, this));
-    }
-};
-const InitializeTokenMintArgsSchema = new Map([
-    [
-    InitializeTokenMintArgs, {
-            kind: 'struct',
-            fields: [
-                ['instruction', 'u8'],
-                ['id', { kind: 'option', type: 'u64' }],
-                ['description', 'string'],
-                ['owner', 'string'],
-                ['creator', 'string'],
-                ['authorize', 'bool'],
-                ['url', 'string'],
-                ['cid', 'string'],
-                ['is_mutable', 'bool']
-            ]
-        }
-    ]
-]);
+//     let PDA;
+//     PDA = await getPDA();
+//     console.log("PDA: ",PDA)
+
+//     let instruction = new TransactionInstruction({
+//             programId: new PublicKey(nftAddressV2),
+//             keys: [
+//                 { pubkey: phantom.publicKey, isSigner: true, isWritable: true },        // Initializer     
+//                 { pubkey: phantom.publicKey, isSigner: true, isWritable: true },         // token_mint      
+//                 { pubkey: phantom.publicKey, isSigner: true, isWritable: false },             // mint_auth             
+//                 { pubkey: new PublicKey(PDA), isSigner: false, isWritable: true },     // token_metadata     
+//                 { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },        // System program  
+//                 { pubkey: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'), isSigner: false, isWritable: false },       // token_program      
+//                 { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },      // sysvar_rent
+//             ],    
+//             data: Buffer.from([instructionData])
+//         });
+
+
+
+//     const transaction = new Transaction().add(instruction);
+
 
 
 const programId = new PublicKey(
-    "G1DCNUQTSGHehwdLCAmRyAG8hf51eCHrLNUqkgGKYASj"
-  );
+  "G1DCNUQTSGHehwdLCAmRyAG8hf51eCHrLNUqkgGKYASj"
+);
 
-  async function getPDA(){
-    let [pda, bump] = await PublicKey.findProgramAddress(
+async function getPDA() {
+  let [pda, bump] = await PublicKey.findProgramAddress(
     [Buffer.from("metadata")],
     programId
   );
 
-    console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
-    return pda.toBase58();
+  console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
+  return pda.toBase58();
+}
+
+
+async function callContract() {
+  class Assignable {
+    constructor(properties: { [x: string]: any; methods_id?: number; id?: number; description?: string; owner?: string; creator?: string; authorize?: boolean; url?: string; cid?: string; is_mutable?: boolean; }) {
+      Object.keys(properties).map((key) => {
+        return (this[key] = properties[key]);
+      });
+    };
+  };
+
+  function intToBool(i: number) {
+    if (i == 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
+
+  function boolToInt(t: boolean) {
+    if (t) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  const boolMapper = {
+    encode: boolToInt,
+    decode: intToBool,
+  };
+
+  class InitializeTokenMintArgs extends Assignable {
+    toBuffer() {
+      return Buffer.from(borsh.serialize(InitializeTokenMintArgsSchema, this));
+    }
+  };
+  const InitializeTokenMintArgsSchema = new Map([
+    [
+      InitializeTokenMintArgs, {
+        kind: 'struct',
+        fields: [
+          ["methods_id", "u64"],
+          ["id", "u64"],
+          ["description", "string"],
+          ["owner", "string"],
+          ["creator", "string"],
+          ["authorize", "u8", boolMapper],
+          ["url", "string"],
+          ["cid", "string"],
+          ["is_mutable", "u8", boolMapper],
+        ]
+      }
+    ]
+  ]);
+
+
+  class InstructionData extends Assignable {
+    toBuffer() {
+      return Buffer.from(borsh.serialize(InstructionDataSchema, this));
+    }
+  }
+
+  const InstructionDataSchema = new Map([
+    [
+      InstructionData,
+      {
+        kind: "struct",
+        fields: [
+          ["methods_id", "u64"],
+          ["id", "u64"],
+          ["description", "string"],
+          ["owner", "string"],
+          ["creator", "string"],
+          ["authorize", "u8", boolMapper],
+          ["url", "string"],
+          ["cid", "string"],
+          ["is_mutable", "u8", boolMapper],
+        ],
+      },
+    ],
+  ]);
+
+  const nftMint = new InstructionData({
+    methods_id: 2,
+    id: 3,
+    description: "hello world!",
+    owner: "Ee9tjcAXwDeHtVxKePgQos3YqxGo9sxExryCT8a1DFqe",
+    creator: "Ee9tjcAXwDeHtVxKePgQos3YqxGo9sxExryCT8a1DFqe",
+    authorize: true,
+    url: "https://green-sad-canidae-844.mypinata.cloud/ipfs/QmcUgQvRjpgg1qhsfVNE497unLzMVkHbERQcPkCWdx5tyU/0.json",
+    cid: "QmcUgQvRjpgg1qhsfVNE497unLzMVkHbERQcPkCWdx5tyU",
+    is_mutable: false,
+  });
+
+  const instruction = new TransactionInstruction({
+    programId: new PublicKey(
+      "4SqR3DmxCeoLS8pej73CSnNrTmnM58h3WZjS1dksV9ZQ"
+    ),
+    keys: [],
+    data: nftMint.toBuffer(),
+  })
+
   
+  const transaction = new Transaction();
+  // // 获取最近的区块交易哈希
+  // anyTransaction.recentBlockhash = (
+  //   await connection.getLatestBlockhash('finalized')
+  // ).blockhash;
+
+  let blockhash = (await connection.getLatestBlockhash('finalized')).blockhash;
+  transaction.recentBlockhash = blockhash;
+
+  transaction.feePayer = phantom.publicKey;
+  await transaction.add(instruction)
+  console.log('transaction==>', transaction)
+  // 签名并广播交易
+  const tx = await phantom.signAndSendTransaction(transaction);
+  // console.log('signature==>', signature)
+  // 获取交易签名
+  await connection.getSignatureStatus(tx.signature)
+  console.log('hash==>', tx)
+
+}
+
 </script>
 
 
