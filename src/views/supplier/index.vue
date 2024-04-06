@@ -104,12 +104,13 @@ import { computed, ref, reactive, onMounted } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElLoading } from 'element-plus'
 import { Document } from '@element-plus/icons-vue'
-
 import type { UploadProps, UploadUserFile } from 'element-plus'
 import API from '@/api/index'
-
 import { useWallet } from 'solana-wallets-vue'
+import { useContract } from '@/hooks/useContract'
+
 const { publicKey } = useWallet()
+const { callContract } = useContract()
 const exampleFileList = ref([])
 const currentPage = ref(4)
 const pageSize = ref(100)
@@ -148,30 +149,7 @@ const exampleFile = computed(() => {
   return res.slice(0, 2)
 })
 
-const tableData: any[] = reactive([
-  {
-    infoTotal: 400,
-    date: '2016-05-03',
-    category: 'urine',
-    desc: 'xxxx xxx',
-    price: 20,
-    gatherImg:
-      'https://i.seadn.io/gae/3hqgtmgLMJXSmKT6SILdYaeXCNy_eAeqqdH9l_Xc1wqjSf0J2F1AwbMf-rizYrzrFvUGdyGsNYUizclsYCwcan5ass3-X3wz2NlhFEo?auto=format&dpr=1&h=500&fr=1',
-    img: 'https://i.seadn.io/s/raw/files/64f5dd9d1860435dac4448c3e59f3ea2.png?auto=format&dpr=1&w=128',
-    owners: '2000',
-  },
-  {
-    infoTotal: 123,
-    date: '2016-05-02',
-    category: 'saliva',
-    desc: 'xxxx xxx',
-    price: 20,
-    gatherImg:
-      'https://i.seadn.io/s/raw/files/6e725e68619c97f6b98a3cc6204f5d60.jpg?auto=format&dpr=1&h=500&fr=1',
-    img: 'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?auto=format&dpr=1&w=128',
-    owners: '2000',
-  },
-])
+const tableData: any[] = reactive([])
 let ruleFormRef = ref<FormInstance>()
 
 const rules = reactive<FormRules<any>>({
@@ -221,8 +199,9 @@ const confirm = async (formEl: FormInstance | undefined) => {
         code: form.detectionNum,
         files: form.fileList[0].raw,
       })
-      loadingInstance.close()
+
       if (code === 200) {
+        await callContract(data)
         dialogFormVisible.value = false
         ElMessage({
           message: 'Add success',
@@ -232,6 +211,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
       } else {
         ElMessage.error('Add failure')
       }
+      loadingInstance.close()
     } else {
       console.log('error submit!', fields)
     }
@@ -239,17 +219,17 @@ const confirm = async (formEl: FormInstance | undefined) => {
 }
 const randomColor = (val: string): string => {
   let suffix = ''
-  switch (val) {
-    case 'A':
+  switch (val.toLowerCase()) {
+    case 'a':
       suffix = '1'
       break
-    case 'G':
+    case 'g':
       suffix = '2'
       break
-    case 'C':
+    case 'c':
       suffix = '3'
       break
-    case 'T':
+    case 't':
       suffix = '4'
       break
 
@@ -301,6 +281,14 @@ const validWallet = () => {
 }
 
 const onSearch = () => {
+  callContract({
+    message: 'upload success!',
+    url: 'https://green-sad-canidae-844.mypinata.cloud/ipfs/QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH',
+    agct: 'ATTAAAGGTTTATACC',
+    gcContent: '37.97%',
+    timestamp: 1712392721929,
+  })
+  return
   if (!validWallet()) return
 }
 const addHandle = () => {
