@@ -21,7 +21,7 @@
           <el-button type="primary" @click="onSearch">Query</el-button>
         </el-form-item>
       </el-form>
-      <el-button class="w-150px" type="primary" @click="onSubmit">Add</el-button>
+      <el-button class="w-150px" type="primary" @click="addHandle">Add</el-button>
     </div>
     <el-table :data="tableData" style="width: 100%" row-class-name='text-[#000] font-500'
       header-row-class-name='text-[#000] font-500'>
@@ -69,19 +69,22 @@
         <el-input v-model="form.detectionNum" />
       </el-form-item>
       <el-form-item label="Attachments" prop="fileList">
-        <div>
-          <el-upload v-model:file-list="form.fileList" class="upload-demo" multiple :limit="1"
-            action="#" :auto-upload="false" :on-preview="handlePreview" :on-remove="handleRemove">
+        <div class="flex-between w-full">
+          <el-upload v-model:file-list="form.fileList" class="upload-demo flex-1 overflow-hidden"
+            multiple :limit="1" action="#" :auto-upload="false" :on-preview="handlePreview"
+            :on-remove="handleRemove">
             <el-button type="primary">Click to upload</el-button>
           </el-upload>
-          <!-- <div>
-            <p>Sample file</p>
-            <div>
+          <div v-if="exampleFile">
+            <p>Download sample file</p>
+            <div v-for="(file,idx) in exampleFile" :key="idx" class="flex-y-center"
+              @click="downloadFile(file)">
               <el-icon>
                 <Document />
               </el-icon>
+              <el-button class="ml-4px" type="primary" link>{{ file.label }}</el-button>
             </div>
-          </div> -->
+          </div>
         </div>
       </el-form-item>
     </el-form>
@@ -107,13 +110,44 @@ import API from '@/api/index'
 
 import { useWallet } from 'solana-wallets-vue'
 const { publicKey } = useWallet()
+const exampleFileList = ref([])
 const currentPage = ref(4)
 const pageSize = ref(100)
 const total = ref(0)
 const small = ref(false)
 const disabled = ref(false)
-const dialogFormVisible = ref(true)
-onMounted(() => {})
+const dialogFormVisible = ref(false)
+onMounted(async () => {
+  const { status, code, data } = await API.getGenomes()
+  if (code === 200) {
+    dialogFormVisible.value = false
+    exampleFileList.value = data
+  }
+})
+const downloadFile = (file: { value: string; uri: string }) => {
+  let link = document.createElement('a') // 创建a标签
+  link.href = file.uri.includes('http') ? file.uri : `http://${file.uri}`
+  link.download = file.value // 重命名文件
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+const exampleFile = computed(() => {
+  let _list: any = exampleFileList.value.find(
+    (i: { label: string; description: string; child: [] }) =>
+      i.label === form.category
+  )
+  const res = _list
+    ? _list.child.reduce(
+        (prev: [], cur: { label: string; description: string; child: [] }) => {
+          return cur.child ? [...prev, ...cur.child] : [...prev, cur]
+        },
+        []
+      )
+    : ''
+  return res.slice(0, 2)
+})
+
 const tableData: any[] = reactive([
   {
     infoTotal: 400,
@@ -171,12 +205,10 @@ const rules = reactive<FormRules<any>>({
   ],
 })
 const closed = () => {
-  form = reactive({
-    category: '',
-    detectionNum: '',
-    institution: '',
-    fileList: [],
-  })
+  form.category = ''
+  form.detectionNum = ''
+  form.institution = ''
+  form.fileList = []
 }
 const confirm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
@@ -271,7 +303,7 @@ const validWallet = () => {
 const onSearch = () => {
   if (!validWallet()) return
 }
-const onSubmit = () => {
+const addHandle = () => {
   if (!validWallet()) return
   dialogFormVisible.value = true
 }
