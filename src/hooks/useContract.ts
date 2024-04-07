@@ -64,8 +64,8 @@ export const useContract = () => {
       {
         kind: "struct",
         fields: [
-          ["methods_id", "u64"],
-          ["id", "u64"],
+          ["methods_id", "u32"],
+          ["id", "u32"],
           ["description", "string"],
           ["owner", "string"],
           ["creator", "string"],
@@ -98,8 +98,8 @@ export const useContract = () => {
 
     //cid即上传的json哈希
     //cid即上传的json哈希
-    let cid = data.url.slice(data.url.indexOf("ipfs") + 5);
-    console.log("看下cid", data, cid);
+    // let cid = data.url.slice(data.url.indexOf("ipfs") + 5);
+    let cid = data.cid;
     cid = cid.slice(0, 32);
 
     const instructionData = new InitializeTokenMintArgs({

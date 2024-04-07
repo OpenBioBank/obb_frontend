@@ -2,9 +2,9 @@
   <div class="px-180px pb-60px mt-30px supplier flex-1 overflow-auto">
     <div class="flex-between">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="keyword">
+        <!-- <el-form-item label="keyword">
           <el-input v-model="formInline.keyword" placeholder="keyword search" clearable />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="Category">
           <el-select class="w-220px" v-model="formInline.category" placeholder="select category"
             clearable>
@@ -13,37 +13,36 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="add time">
+        <!-- <el-form-item label="add time">
           <el-date-picker v-model="formInline.date" type="date" placeholder="Pick a date"
             clearable />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="onSearch">Query</el-button>
         </el-form-item>
       </el-form>
       <el-button class="w-150px" type="primary" @click="addHandle">Add</el-button>
     </div>
-    <el-table :data="tableData" style="width: 100%" row-class-name='text-[#000] font-500'
-      header-row-class-name='text-[#000] font-500'>
+    <el-table v-loading="tableLoading" :data="tableData" style="width: 100%"
+      row-class-name='text-[#000] font-500' header-row-class-name='text-[#000] font-500'>
       <el-table-column type="index"></el-table-column>
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">
           <div class='grid grid-cols-4 grid-rows-4 w-80px h-80px rounded-6px overflow-hidden'>
-            <div :style="`background:${color}`" v-for="(color,idx) in scope.row.colorList"
+            <div :style="`background:${color}`" v-for="(color) in createColor(scope.row)"
               :key="color" :class="`w-20px h-20px`">
             </div>
           </div>
           <!-- <img :src="scope.row.img" class="w-70px h-70px rounded-6px" alt=""> -->
         </template>
       </el-table-column>
-      <el-table-column label="Category" prop="category" />
-      <el-table-column label="Desc" prop="desc" />
-      <el-table-column label="Price" prop="price" />
-      <el-table-column label="Owners" prop="owners" />
+      <el-table-column label="Category" prop="nftSymbol" />
+      <!-- <el-table-column label="Desc" prop="agct" /> -->
+      <!-- <el-table-column label="Price" prop="price" /> -->
+      <el-table-column label="Owners" prop="creator" />
     </el-table>
     <el-pagination class="mt-20px" v-model:current-page="currentPage" v-model:page-size="pageSize"
-      :page-sizes="[100, 200, 300, 400]" :small="small" :disabled="disabled"
-      layout="total, sizes, prev, pager, next, jumper" :total="total"
+      :small="small" :disabled="disabled" layout="total, prev, pager, next, jumper" :total="total"
       @size-change="handleSizeChange" @current-change="handleCurrentChange" />
   </div>
   <el-dialog @closed="closed" :destroy-on-close="true" v-model="dialogFormVisible" title="add info"
@@ -108,23 +107,64 @@ import type { UploadProps, UploadUserFile } from 'element-plus'
 import API from '@/api/index'
 import { useWallet } from 'solana-wallets-vue'
 import { useContract } from '@/hooks/useContract'
+import { createColor } from '@/hooks/useCreateColor'
+import _ from 'lodash'
 
 const { publicKey } = useWallet()
 const { callContract } = useContract()
 const exampleFileList = ref([])
-const currentPage = ref(4)
-const pageSize = ref(100)
+const currentPage = ref(1)
+const pageSize = ref(10)
 const total = ref(0)
 const small = ref(false)
 const disabled = ref(false)
 const dialogFormVisible = ref(false)
+const tableLoading = ref(false)
+
 onMounted(async () => {
+  setTimeout(() => {
+    if (!publicKey.value) return
+    getGenomes()
+    getNFTByCreator()
+  }, 500)
+})
+const getGenomes = async () => {
   const { status, code, data } = await API.getGenomes()
   if (code === 200) {
     dialogFormVisible.value = false
     exampleFileList.value = data
   }
-})
+}
+const saveNFTInfo = async (params: any) => {
+  const { status, code, data } = await API.saveNFTInfo(params)
+  if (code === 200) {
+    getNFTByCreator()
+    ElMessage({
+      message: 'Add success',
+      type: 'success',
+    })
+  } else {
+    ElMessage({
+      message: 'Add fail',
+      type: 'error',
+    })
+  }
+}
+const getNFTByCreator = async () => {
+  tableLoading.value = true
+  const params: any = {
+    page: currentPage.value,
+    creator: publicKey?.value?.toString(),
+  }
+  formInline.category && (params.nftSymbol = formInline.category)
+  const { status, code, data } = await API.getNFTByCreator(params)
+  if (code === 200) {
+    const { results, totalResults } = _.get(data, 'data', {})
+    total.value = totalResults
+    tableData.value = results
+  }
+  tableLoading.value = false
+}
 const downloadFile = (file: { value: string; uri: string }) => {
   let link = document.createElement('a') // 创建a标签
   link.href = file.uri.includes('http') ? file.uri : `http://${file.uri}`
@@ -136,7 +176,7 @@ const downloadFile = (file: { value: string; uri: string }) => {
 const exampleFile = computed(() => {
   let _list: any = exampleFileList.value.find(
     (i: { label: string; description: string; child: [] }) =>
-      i.label === form.category
+      i.label.toLowerCase() === form.category
   )
   const res = _list
     ? _list.child.reduce(
@@ -149,7 +189,7 @@ const exampleFile = computed(() => {
   return res.slice(0, 2)
 })
 
-const tableData: any[] = reactive([])
+let tableData = ref([])
 let ruleFormRef = ref<FormInstance>()
 
 const rules = reactive<FormRules<any>>({
@@ -194,6 +234,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       const loadingInstance = ElLoading.service({ fullscreen: true })
       const { status, code, data } = await API.sampleCollection({
+        address: publicKey?.value?.toString(),
         sampleType: form.category,
         manufacturer: form.institution,
         code: form.detectionNum,
@@ -203,11 +244,15 @@ const confirm = async (formEl: FormInstance | undefined) => {
       if (code === 200) {
         try {
           await callContract(data)
-          ElMessage({
-            message: 'Add success',
-            type: 'success',
+          await saveNFTInfo({
+            nftSymbol: form.category, //支持的类别  phages  viruses  bacteria  fungi
+            creator: publicKey?.value?.toString(), //用户的账户地址(公钥)
+            cid: data.cid, //数据上传接口返回值，填入即可
+            url: data.url, //数据上传接口返回值，填入即可
+            agct: data.agct, //数据上传接口返回值，填入即可
+            gcContent: data.gcContent, //数据上传接口返回值，填入即可
           })
-          nftImgHandle(data)
+          // createColor(data)
         } catch (error) {
           ElMessage({
             message: 'Add fail',
@@ -231,31 +276,26 @@ const randomColor = (val: string): string => {
       suffix = '1'
       break
     case 'g':
-      suffix = '2'
+      suffix = '4'
       break
     case 'c':
-      suffix = '3'
+      suffix = '9'
       break
     case 't':
-      suffix = '4'
+      suffix = 'e'
       break
 
     default:
       break
   }
-  let random = Math.random()
-  if (random === 0) {
-    return randomColor(val)
-  }
-  return '#' + random.toString(16).substring(2, 7) + suffix
+  // let random = Math.random()
+  // if (random === 0) {
+  //   return randomColor(val)
+  // }
+  // return '#' + random.toString(16).substring(2, 7) + suffix
+  return suffix
 }
 
-const nftImgHandle = (data: any) => {
-  const agct = data.agct
-  const colorList = agct.split('').map((i: string) => randomColor(i))
-  data.colorList = colorList
-  tableData.unshift(data)
-}
 const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
   console.log(file, uploadFiles)
 }
@@ -288,15 +328,8 @@ const validWallet = () => {
 }
 
 const onSearch = () => {
-  callContract({
-    message: 'upload success!',
-    url: 'https://green-sad-canidae-844.mypinata.cloud/ipfs/QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH',
-    agct: 'ATTAAAGGTTTATACC',
-    gcContent: '37.97%',
-    timestamp: 1712392721929,
-  })
-  return
   if (!validWallet()) return
+  getNFTByCreator()
 }
 const addHandle = () => {
   if (!validWallet()) return
@@ -318,20 +351,20 @@ const handleDelete = (index: number, row: any) => {
 }
 const options: any[] = [
   {
-    label: 'Bacteria',
-    value: 'Bacteria',
+    label: 'bacteria',
+    value: 'bacteria',
   },
   {
-    label: 'Fungi',
-    value: 'Fungi',
+    label: 'fungi',
+    value: 'fungi',
   },
   {
-    label: 'Phages',
-    value: 'Phages',
+    label: 'phages',
+    value: 'phages',
   },
   {
-    label: 'Viruses',
-    value: 'Viruses',
+    label: 'viruses',
+    value: 'viruses',
   },
 ]
 const institutionOptions: any[] = [

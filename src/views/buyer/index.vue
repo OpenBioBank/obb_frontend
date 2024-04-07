@@ -2,12 +2,12 @@
   <div class="px-180px mt-30px pb-100px flex-1 overflow-auto">
     <div class="flex-between-c">
       <el-radio-group v-model="tabPosition" style="margin-bottom: 30px">
-        <el-radio-button value="gather">Gather</el-radio-button>
+        <el-radio-button disabled value="gather">Gather</el-radio-button>
         <el-radio-button value="single">Single</el-radio-button>
       </el-radio-group>
       <el-button class="w-100px" type="primary" @click="more">More</el-button>
     </div>
-    <div v-if="tabPosition === 'gather'" class="grid grid-cols-5 gap-x-30px gap-y-30px">
+    <!-- <div v-if="tabPosition === 'gather'" class="grid grid-cols-5 gap-x-30px gap-y-30px">
       <div v-for="item in [...tableData,...tableData]" :key="item.id"
         class="rounded-12px shadow-xl shadow-gray-500/10 overflow-hidden hover:relative -top-6px cursor-pointer"
         @click="goDetails(item)">
@@ -27,32 +27,38 @@
           </div>
         </div>
       </div>
-    </div>
-    <el-table v-else :data="tableData" style="width: 100%"
-      row-class-name='cursor-pointer text-[#000] font-500'
-      header-row-class-name='text-[#000] font-500' @row-click="goDetails">
+    </div> -->
+    <el-table v-loading="tableLoading" :data="tableData" style="width: 100%"
+      row-class-name='text-[#000] font-500' header-row-class-name='text-[#000] font-500'>
       <el-table-column type="index"></el-table-column>
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">
-          <img :src="scope.row.img" class="w-70px h-70px rounded-6px" alt="">
+          <div class='grid grid-cols-4 grid-rows-4 w-80px h-80px rounded-6px overflow-hidden'>
+            <div :style="`background:${color}`" v-for="(color) in createColor(scope.row)"
+              :key="color" :class="`w-20px h-20px`">
+            </div>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="Category" prop="category" />
-      <el-table-column label="Desc" prop="desc" />
-      <el-table-column label="Price" prop="price" />
-      <el-table-column label="Owners" prop="owners" />
+      <el-table-column label="Category" prop="nftSymbol" />
+      <el-table-column label="Owners" prop="creator" />
     </el-table>
   </div>
 
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, reactive } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-const tabPosition = ref('gather')
-const router = useRouter()
+import API from '@/api/index'
+import _ from 'lodash'
+import { createColor } from '@/hooks/useCreateColor'
 
-const goDetails = (row) => {
+const tabPosition = ref('single')
+const router = useRouter()
+const tableLoading = ref(false)
+
+const goDetails = () => {
   router.push({
     path: '/buyer/details',
     query: {
@@ -68,62 +74,22 @@ const more = () => {
     },
   })
 }
+let tableData = ref([])
 
-const tableData: any[] = [
-  {
-    infoTotal: 400,
-    date: '2016-05-03',
-    category: 'urine',
-    desc: 'xxxx xxx',
-    price: 20,
-    gatherImg:
-      'https://i.seadn.io/gae/3hqgtmgLMJXSmKT6SILdYaeXCNy_eAeqqdH9l_Xc1wqjSf0J2F1AwbMf-rizYrzrFvUGdyGsNYUizclsYCwcan5ass3-X3wz2NlhFEo?auto=format&dpr=1&h=500&fr=1',
-    img: 'https://i.seadn.io/s/raw/files/64f5dd9d1860435dac4448c3e59f3ea2.png?auto=format&dpr=1&w=128',
-    owners: '2000',
-  },
-  {
-    infoTotal: 123,
-    date: '2016-05-02',
-    category: 'saliva',
-    desc: 'xxxx xxx',
-    price: 20,
-    gatherImg:
-      'https://i.seadn.io/s/raw/files/6e725e68619c97f6b98a3cc6204f5d60.jpg?auto=format&dpr=1&h=500&fr=1',
-    img: 'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?auto=format&dpr=1&w=128',
-    owners: '2000',
-  },
-  {
-    infoTotal: 570,
-    date: '2016-05-04',
-    category: 'hair',
-    desc: 'xxxx xxx',
-    price: 20,
-    gatherImg:
-      'https://i.seadn.io/gae/3hqgtmgLMJXSmKT6SILdYaeXCNy_eAeqqdH9l_Xc1wqjSf0J2F1AwbMf-rizYrzrFvUGdyGsNYUizclsYCwcan5ass3-X3wz2NlhFEo?auto=format&dpr=1&h=500&fr=1',
-    img: 'https://i.seadn.io/s/raw/files/64f5dd9d1860435dac4448c3e59f3ea2.png?auto=format&dpr=1&w=128',
-    owners: '2000',
-  },
-  {
-    infoTotal: 8000,
-    date: '2016-05-01',
-    category: 'blood',
-    desc: 'xxxx xxx',
-    price: 20,
-    gatherImg:
-      'https://i.seadn.io/s/raw/files/6e725e68619c97f6b98a3cc6204f5d60.jpg?auto=format&dpr=1&h=500&fr=1',
-    img: 'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?auto=format&dpr=1&w=128',
-    owners: '2000',
-  },
-  {
-    infoTotal: 8000,
-    date: '2016-05-01',
-    category: 'blood',
-    desc: 'xxxx xxx',
-    price: 20,
-    gatherImg:
-      'https://i.seadn.io/s/raw/files/6e725e68619c97f6b98a3cc6204f5d60.jpg?auto=format&dpr=1&h=500&fr=1',
-    img: 'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?auto=format&dpr=1&w=128',
-    owners: '2000',
-  },
-]
+onMounted(async () => {
+  getNFTInfo()
+})
+
+const getNFTInfo = async () => {
+  tableLoading.value = true
+  const params: any = {
+    page: 1,
+  }
+  const { status, code, data } = await API.getNFTInfo(params)
+  if (code === 200) {
+    const { results } = _.get(data, 'data', {})
+    tableData.value = results
+  }
+  tableLoading.value = false
+}
 </script>
