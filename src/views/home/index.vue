@@ -1,6 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col overflow-auto  bg-gradient-to-r from-[#000] to-[#000]">
-    <main class="flex-between-c text-[#fff] flex-1  px-180px">
+    <main class="flex-between-c text-[#fff] flex-1  mx-180px bg-contain bg-no-repeat bg-right-top"
+      :style="`background-image:url('${icon_dna}')`">
       <div>
         <img class="w-180px h-84px mt-8px mb-12px" src="@/assets/image/logo_name2.png" alt="">
         <p class="mt-16px mb-27px leading-17px">Discover OPEN BIOBANK, <br>a leading company in the
@@ -8,9 +9,6 @@
         <!-- <div
           class=" cursor-pointer bg-[#FFB500] rounded-12px w-84px h-24px text-11px flex-center text-[#000]">
           CONNECT</div> -->
-      </div>
-      <div class="w-305px h-305px  blur-sm ">
-        <img class=" w-200px h-214px mt-8px mb-12px" src="@/assets/image/logo_drug.png" alt="">
       </div>
 
     </main>
@@ -54,22 +52,13 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { Icon } from '@iconify/vue'
+import icon_dna from '@/assets/image/icon_dna.jpg'
 
 const onSubmit = () => {
   console.log('submit!')
 }
 </script>
 <style lang="less" scoped>
-.blur-sm::before {
-  content: ' ';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  filter: blur(50px);
-  background: inherit;
-  z-index: -1;
-  background: linear-gradient(90deg, #000000 0%, #482700 100%);
-}
 .footer-content::before {
   content: ' ';
   position: absolute;

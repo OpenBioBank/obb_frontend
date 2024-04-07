@@ -21,7 +21,7 @@ export const useContract = () => {
   const rpc =
     "https://solana-devnet.g.alchemy.com/v2/OLI1XL9pAdLjtvpt06bqBfdbsdODRn_Y";
   const connection = new Connection(ENV.VITE_APP_RPC, "confirmed");
-  const nftAddressV2 = process.env.VITE_APP_CONTRACT_ADDRESS;
+  const nftAddressV2 = ENV.VITE_APP_CONTRACT_ADDRESS;
 
   class Assignable {
     constructor(properties) {
