@@ -201,13 +201,20 @@ const confirm = async (formEl: FormInstance | undefined) => {
       })
 
       if (code === 200) {
-        await callContract(data)
+        try {
+          await callContract(data)
+          ElMessage({
+            message: 'Add success',
+            type: 'success',
+          })
+          nftImgHandle(data)
+        } catch (error) {
+          ElMessage({
+            message: 'Add fail',
+            type: 'error',
+          })
+        }
         dialogFormVisible.value = false
-        ElMessage({
-          message: 'Add success',
-          type: 'success',
-        })
-        nftImgHandle(data)
       } else {
         ElMessage.error('Add failure')
       }

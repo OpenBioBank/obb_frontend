@@ -13,13 +13,6 @@
 
 <script setup lang="ts">
 import Header from '@/components/Header.vue'
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
-
-// const $route = useRoute()
-// // 是否使用keep-alive
-// const isKeepAlive = computed(() => $route?.meta?.keepAlive)
-// console.log(isKeepAlive)
 </script>
 
 <style scoped>

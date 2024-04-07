@@ -1,7 +1,8 @@
-import { post, get } from '@/utils/request'
+import { post, get } from "@/utils/request";
 
-const baseURL = `http://www.openbiobank.xyz/v1`
+const baseURL = `/v1/storage`;
 export default {
-  sampleCollection: (params:any) => post(`${baseURL}/storage/sampleCollection`, params,{ type: 'FORM_DATA' }),
-  getGenomes: () => get(`${baseURL}/storage/getGenomes`),
-}
+  sampleCollection: (params: any) =>
+    post(`${baseURL}/sampleCollection`, params, { type: "FORM_DATA" }),
+  getGenomes: () => get(`${baseURL}/getGenomes`),
+};

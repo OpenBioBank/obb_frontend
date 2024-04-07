@@ -14,14 +14,14 @@ import {
   TransactionInstruction,
   PublicKey,
 } from "@solana/web3.js";
+const ENV = import.meta.env;
 
 export const useContract = () => {
   // solana devnet rpc
   const rpc =
     "https://solana-devnet.g.alchemy.com/v2/OLI1XL9pAdLjtvpt06bqBfdbsdODRn_Y";
-  const connection = new Connection(rpc, "confirmed");
-
-  const nftAddressV2 = "CyGeFwXuqGHVV5HuzJ1iFMRqeL2YxU5CYTXyy5Cpbkg1";
+  const connection = new Connection(ENV.VITE_APP_RPC, "confirmed");
+  const nftAddressV2 = process.env.VITE_APP_CONTRACT_ADDRESS;
 
   class Assignable {
     constructor(properties) {
@@ -222,5 +222,6 @@ export const useContract = () => {
   };
   return {
     callContract,
+    connection,
   };
 };
