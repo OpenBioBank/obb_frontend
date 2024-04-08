@@ -52,7 +52,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { Icon } from '@iconify/vue'
-import icon_dna from '@/assets/image/icon_dna.jpg'
+import icon_dna from '@/assets/image/icon_dna.png'
 
 const onSubmit = () => {
   console.log('submit!')

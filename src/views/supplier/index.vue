@@ -43,7 +43,7 @@
       <el-table-column label="OMICS GC" prop="gcContent" />
       <el-table-column label="Description" prop="desc">
         <template #default="scope">
-          <div>{{ scope.row.code ||  descHandle(scope.row)}}</div>
+          <div>{{ scope.row.desc ||  descHandle(scope.row)}}</div>
         </template>
       </el-table-column>
       <el-table-column label="Category" prop="nftSymbol" />
@@ -75,14 +75,14 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="description" prop="detectionNum">
-        <el-input v-model="form.detectionNum" />
+      <el-form-item label="description">
+        <el-input type="textarea" v-model="form.desc" />
       </el-form-item>
       <el-form-item label="Attachments" prop="fileList">
         <div class="flex-between w-full">
-          <el-upload v-model:file-list="form.fileList" class="upload-demo flex-1 overflow-hidden"
-            multiple :limit="1" action="#" :auto-upload="false" :on-preview="handlePreview"
-            :on-remove="handleRemove">
+          <el-upload accept=".fna" v-model:file-list="form.fileList"
+            class="upload-demo flex-1 overflow-hidden" multiple :limit="1" action="#"
+            :auto-upload="false" :on-preview="handlePreview" :on-remove="handleRemove">
             <el-button type="primary">Click to upload</el-button>
           </el-upload>
           <div v-if="exampleFile">
@@ -218,13 +218,13 @@ const rules = reactive<FormRules<any>>({
       trigger: ['blur', 'change'],
     },
   ],
-  detectionNum: [
-    {
-      required: true,
-      message: 'Please input description',
-      trigger: ['blur', 'change'],
-    },
-  ],
+  // desc: [
+  //   {
+  //     required: true,
+  //     message: 'Please input description',
+  //     trigger: ['blur', 'change'],
+  //   },
+  // ],
   fileList: [
     {
       required: true,
@@ -235,7 +235,7 @@ const rules = reactive<FormRules<any>>({
 })
 const closed = () => {
   form.category = ''
-  form.detectionNum = ''
+  form.desc = ''
   form.institution = ''
   form.fileList = []
 }
@@ -249,7 +249,6 @@ const confirm = async (formEl: FormInstance | undefined) => {
         address: publicKey?.value?.toString(),
         sampleType: form.category,
         manufacturer: form.institution,
-        code: form.detectionNum,
         files: form.fileList[0].raw,
       })
 
@@ -263,6 +262,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
             url: data.url, //数据上传接口返回值，填入即可
             agct: data.agct, //数据上传接口返回值，填入即可
             gcContent: data.gcContent, //数据上传接口返回值，填入即可
+            desc: form.desc,
           })
           // createColor(data)
         } catch (error) {
@@ -323,7 +323,7 @@ const formInline = reactive({
 let form = reactive({
   category: '',
   // desc: '',
-  detectionNum: '',
+  desc: '',
   institution: '',
   fileList: ref<UploadUserFile[]>([]),
 })

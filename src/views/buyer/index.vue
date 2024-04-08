@@ -47,7 +47,7 @@
       <el-table-column label="OMICS GC" prop="gcContent" />
       <el-table-column label="Description" prop="desc">
         <template #default="scope">
-          <div>{{ scope.row.code ||  descHandle(scope.row)}}</div>
+          <div>{{ scope.row.desc ||  descHandle(scope.row)}}</div>
         </template>
       </el-table-column>
       <el-table-column label="Category" prop="nftSymbol" />
