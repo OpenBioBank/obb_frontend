@@ -229,7 +229,7 @@ const getNFTInfo = async () => {
   if (code === 200) {
     const { results, totalResults } = _.get(data, 'data', {})
     total.value = totalResults
-    tableData.value = results
+    tableData.value = results.reverse()
   }
   tableLoading.value = false
 }

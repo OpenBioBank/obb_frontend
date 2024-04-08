@@ -2,9 +2,7 @@
   <div class="px-180px pb-60px mt-30px supplier flex-1 overflow-auto">
     <div class="flex-between">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <!-- <el-form-item label="keyword">
-          <el-input v-model="formInline.keyword" placeholder="keyword search" clearable />
-        </el-form-item> -->
+
         <el-form-item label="Category">
           <el-select class="w-220px" v-model="formInline.category" placeholder="select category"
             clearable>
@@ -13,10 +11,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="add time">
-          <el-date-picker v-model="formInline.date" type="date" placeholder="Pick a date"
-            clearable />
-        </el-form-item> -->
+
         <el-form-item>
           <el-button type="primary" @click="onSearch">Query</el-button>
         </el-form-item>
@@ -28,16 +23,14 @@
       <el-table-column type="index"></el-table-column>
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">
-          <!-- <div class="flex-y-center"> -->
+
           <div class='grid grid-cols-4 grid-rows-4 w-80px h-80px rounded-6px overflow-hidden'>
             <div :style="`background:${color}`" v-for="(color) in createColor(scope.row)"
               :key="color" :class="`w-20px h-20px`">
             </div>
 
           </div>
-          <!-- <div class="ml-20px">{{ scope.row.gcContent }}</div> -->
-          <!-- </div> -->
-          <!-- <img :src="scope.row.img" class="w-70px h-70px rounded-6px" alt=""> -->
+
         </template>
       </el-table-column>
       <el-table-column label="OMICS GC" prop="gcContent" />
@@ -48,8 +41,6 @@
       </el-table-column>
       <el-table-column label="Category" prop="nftSymbol" />
 
-      <!-- <el-table-column label="Desc" prop="agct" /> -->
-      <!-- <el-table-column label="Price" prop="price" /> -->
       <el-table-column label="Owners" prop="creator" />
     </el-table>
     <el-pagination class="mt-20px" v-model:current-page="currentPage" v-model:page-size="pageSize"
@@ -172,7 +163,7 @@ const getNFTByCreator = async () => {
   if (code === 200) {
     const { results, totalResults } = _.get(data, 'data', {})
     total.value = totalResults
-    tableData.value = results
+    tableData.value = results.reverse()
   }
   tableLoading.value = false
 }
@@ -218,13 +209,6 @@ const rules = reactive<FormRules<any>>({
       trigger: ['blur', 'change'],
     },
   ],
-  // desc: [
-  //   {
-  //     required: true,
-  //     message: 'Please input description',
-  //     trigger: ['blur', 'change'],
-  //   },
-  // ],
   fileList: [
     {
       required: true,
@@ -281,32 +265,6 @@ const confirm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
-const randomColor = (val: string): string => {
-  let suffix = ''
-  switch (val.toLowerCase()) {
-    case 'a':
-      suffix = '1'
-      break
-    case 'g':
-      suffix = '4'
-      break
-    case 'c':
-      suffix = '9'
-      break
-    case 't':
-      suffix = 'e'
-      break
-
-    default:
-      break
-  }
-  // let random = Math.random()
-  // if (random === 0) {
-  //   return randomColor(val)
-  // }
-  // return '#' + random.toString(16).substring(2, 7) + suffix
-  return suffix
-}
 
 const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
   console.log(file, uploadFiles)
@@ -322,7 +280,6 @@ const formInline = reactive({
 })
 let form = reactive({
   category: '',
-  // desc: '',
   desc: '',
   institution: '',
   fileList: ref<UploadUserFile[]>([]),

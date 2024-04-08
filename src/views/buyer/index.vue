@@ -99,7 +99,7 @@ const getNFTInfo = async () => {
   const { status, code, data } = await API.getNFTInfo(params)
   if (code === 200) {
     const { results } = _.get(data, 'data', {})
-    tableData.value = results
+    tableData.value = results.reverse()
   }
   tableLoading.value = false
 }
