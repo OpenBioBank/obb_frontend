@@ -163,7 +163,7 @@ const getNFTByCreator = async () => {
   if (code === 200) {
     const { results, totalResults } = _.get(data, 'data', {})
     total.value = totalResults
-    tableData.value = results.reverse()
+    tableData.value = results
   }
   tableLoading.value = false
 }
