@@ -36,7 +36,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/v1": {
-        target: "http://www.openbiobank.xyz",
+        target: "http://api.openbiobank.xyz",
         changeOrigin: true,
       },
     },
