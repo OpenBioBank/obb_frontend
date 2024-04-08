@@ -33,14 +33,25 @@
       <el-table-column type="index"></el-table-column>
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">
+          <!-- <div class="flex-y-center"> -->
           <div class='grid grid-cols-4 grid-rows-4 w-80px h-80px rounded-6px overflow-hidden'>
             <div :style="`background:${color}`" v-for="(color) in createColor(scope.row)"
               :key="color" :class="`w-20px h-20px`">
             </div>
           </div>
+          <!-- <div class="ml-20px">{{ scope.row.gcContent }}</div>
+          </div> -->
+
+        </template>
+      </el-table-column>
+      <el-table-column label="OMICS GC" prop="gcContent" />
+      <el-table-column label="Description" prop="desc">
+        <template #default="scope">
+          <div>{{ scope.row.code ||  descHandle(scope.row)}}</div>
         </template>
       </el-table-column>
       <el-table-column label="Category" prop="nftSymbol" />
+
       <el-table-column label="Owners" prop="creator" />
     </el-table>
   </div>
@@ -52,7 +63,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import API from '@/api/index'
 import _ from 'lodash'
-import { createColor } from '@/hooks/useCreateColor'
+import { createColor, descHandle } from '@/hooks/useCreateColor'
 
 const tabPosition = ref('single')
 const router = useRouter()

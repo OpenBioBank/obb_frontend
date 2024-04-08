@@ -19,3 +19,27 @@ export const createColor = (row: any) => {
   }
   return colorArr;
 };
+export const  descHandle = (row: any) => {
+  let text = ''
+  switch (row.nftSymbol) {
+    case 'viruses':
+      text =
+        'The main type of virus that has a major impact on public health, HIV.'
+      break
+    case 'phages':
+      text =
+        'The widely studied model phage has a deep understanding of the fundamental processes of molecular biology.'
+      break
+    case 'bacteria':
+      text = 'Used as a model organism in molecular biology research.'
+      break
+    case 'fungi':
+      text =
+        'Saccharomyces cerevisiae, an important model for gene expression and function studies.'
+      break
+
+    default:
+      break
+  }
+  return text
+}

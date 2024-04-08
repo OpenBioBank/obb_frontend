@@ -28,15 +28,26 @@
       <el-table-column type="index"></el-table-column>
       <el-table-column label="Collection" prop="desc">
         <template #default="scope">
+          <!-- <div class="flex-y-center"> -->
           <div class='grid grid-cols-4 grid-rows-4 w-80px h-80px rounded-6px overflow-hidden'>
             <div :style="`background:${color}`" v-for="(color) in createColor(scope.row)"
               :key="color" :class="`w-20px h-20px`">
             </div>
+
           </div>
+          <!-- <div class="ml-20px">{{ scope.row.gcContent }}</div> -->
+          <!-- </div> -->
           <!-- <img :src="scope.row.img" class="w-70px h-70px rounded-6px" alt=""> -->
         </template>
       </el-table-column>
+      <el-table-column label="OMICS GC" prop="gcContent" />
+      <el-table-column label="Description" prop="desc">
+        <template #default="scope">
+          <div>{{ scope.row.code ||  descHandle(scope.row)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="Category" prop="nftSymbol" />
+
       <!-- <el-table-column label="Desc" prop="agct" /> -->
       <!-- <el-table-column label="Price" prop="price" /> -->
       <el-table-column label="Owners" prop="creator" />
@@ -64,7 +75,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="Detection coding" prop="detectionNum">
+      <el-form-item label="description" prop="detectionNum">
         <el-input v-model="form.detectionNum" />
       </el-form-item>
       <el-form-item label="Attachments" prop="fileList">
@@ -107,7 +118,7 @@ import type { UploadProps, UploadUserFile } from 'element-plus'
 import API from '@/api/index'
 import { useWallet } from 'solana-wallets-vue'
 import { useContract } from '@/hooks/useContract'
-import { createColor } from '@/hooks/useCreateColor'
+import { createColor, descHandle } from '@/hooks/useCreateColor'
 import _ from 'lodash'
 
 const { publicKey } = useWallet()
@@ -210,7 +221,7 @@ const rules = reactive<FormRules<any>>({
   detectionNum: [
     {
       required: true,
-      message: 'Please input Detection coding',
+      message: 'Please input description',
       trigger: ['blur', 'change'],
     },
   ],
@@ -228,6 +239,7 @@ const closed = () => {
   form.institution = ''
   form.fileList = []
 }
+
 const confirm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
