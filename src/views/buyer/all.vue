@@ -41,6 +41,12 @@
           <!-- <img :src="scope.row.img" class="w-70px h-70px rounded-6px" alt=""> -->
         </template>
       </el-table-column>
+      <el-table-column label="OMICS GC" prop="gcContent" />
+      <el-table-column label="Description" prop="desc">
+        <template #default="scope">
+          <div>{{ scope.row.desc ||  descHandle(scope.row)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="Category" prop="nftSymbol" />
       <!-- <el-table-column label="Desc" prop="agct" /> -->
       <!-- <el-table-column label="Price" prop="price" /> -->
@@ -102,7 +108,7 @@ import { useRouter, useRoute } from 'vue-router'
 
 import API from '@/api/index'
 import _ from 'lodash'
-import { createColor } from '@/hooks/useCreateColor'
+import { createColor, descHandle } from '@/hooks/useCreateColor'
 
 const category0 = ref('trending')
 const category1 = ref('all')
@@ -218,6 +224,7 @@ const handleSizeChange = (val: number) => {
 }
 const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`)
+  getNFTInfo()
 }
 const getNFTInfo = async () => {
   tableLoading.value = true

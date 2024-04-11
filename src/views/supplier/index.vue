@@ -309,6 +309,7 @@ const handleSizeChange = (val: number) => {
 }
 const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`)
+  getNFTByCreator()
 }
 const handleEdit = (index: number, row: any) => {
   console.log(index, row)
