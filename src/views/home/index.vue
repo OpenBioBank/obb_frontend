@@ -1,11 +1,15 @@
 <template>
   <div class="flex-1 flex flex-col overflow-auto  bg-gradient-to-r from-[#000] to-[#000]">
-    <main class="flex-between-c text-[#fff] flex-1  mx-180px bg-contain bg-no-repeat bg-right-top"
+    <main
+      class="flex-between-c text-[#fff] flex-1  ml-180px bg-contain bg-no-repeat bg-right-top pb-100px relative -top-60px"
       :style="`background-image:url('${icon_dna}')`">
-      <div>
-        <img class="w-180px h-84px mt-8px mb-12px" src="@/assets/image/logo_name2.png" alt="">
-        <p class="mt-16px mb-27px leading-17px">Discover OPEN BIOBANK, <br>a leading company in the
-          Biotechnology, Gene, and Blockchain industry</p>
+      <div class="mt-116px">
+        <img class="h-46px mb-30px" src="@/assets/image/icon_year.png" alt="">
+        <img class="w-360px h-168px mt-8px mb-12px" src="@/assets/image/logo_name2.png" alt="">
+        <p class="mt-33px mb-27px text-24px leading-34px font-800">Discover OPEN BIOBANK, <br>a
+          leading
+          company in the
+          Biotechnology, <br>Gene, and Blockchain industry</p>
         <!-- <div
           class=" cursor-pointer bg-[#FFB500] rounded-12px w-84px h-24px text-11px flex-center text-[#000]">
           CONNECT</div> -->
