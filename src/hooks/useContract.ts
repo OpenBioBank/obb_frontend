@@ -15,6 +15,7 @@ import {
   PublicKey,
 } from "@solana/web3.js";
 const ENV = import.meta.env;
+import { Nft } from "@/models/Nft.ts";
 
 export const useContract = () => {
   // solana devnet rpc
@@ -23,60 +24,6 @@ export const useContract = () => {
   const connection = new Connection(ENV.VITE_APP_RPC, "confirmed");
   const nftAddressV2 = ENV.VITE_APP_CONTRACT_ADDRESS;
 
-  class Assignable {
-    constructor(properties) {
-      Object.keys(properties).map((key) => {
-        return (this[key] = properties[key]);
-      });
-    }
-  }
-
-  function intToBool(i: number) {
-    if (i == 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  function boolToInt(t: boolean) {
-    if (t) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
-  const boolMapper = {
-    encode: boolToInt,
-    decode: intToBool,
-  };
-
-  class InitializeTokenMintArgs extends Assignable {
-    toBuffer() {
-      return Buffer.from(borsh.serialize(InitializeTokenMintArgsSchema, this));
-    }
-  }
-
-  const InitializeTokenMintArgsSchema = new Map([
-    [
-      InitializeTokenMintArgs,
-      {
-        kind: "struct",
-        fields: [
-          ["methods_id", "u32"],
-          ["id", "u32"],
-          ["description", "string"],
-          ["owner", "string"],
-          ["creator", "string"],
-          ["authorize", "u8", boolMapper],
-          ["url", "string"],
-          ["cid", "string"],
-          ["is_mutable", "u8", boolMapper],
-        ],
-      },
-    ],
-  ]);
   const getProvider = () => {
     if ("phantom" in window) {
       const provider = window.phantom?.solana;
@@ -102,9 +49,9 @@ export const useContract = () => {
     let cid = data.cid;
     cid = cid.slice(0, 32);
 
-    const instructionData = new InitializeTokenMintArgs({
+    const instructionData = new Nft({
       methods_id: 0,
-      id: 81,
+      id: 101,
       description: data.agct,
       owner: phantom.publicKey.toBase58(),
       creator: phantom.publicKey.toBase58(),
@@ -128,7 +75,12 @@ export const useContract = () => {
       [tokenMint.toBuffer(), Buffer.from(cid)],
       new PublicKey(nftAddressV2)
     );
-
+    console.log(
+      "tokenMint",
+      tokenMint.toBase58(),
+      mintAuth.toBase58(),
+      metadata.toBase58()
+    );
     let instruction = new TransactionInstruction({
       keys: [
         { pubkey: phantom.publicKey, isSigner: true, isWritable: false }, // Initializer
@@ -140,9 +92,10 @@ export const useContract = () => {
         { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false }, // sysvar_rent
       ],
       programId: new PublicKey(nftAddressV2),
-      data: instructionData.toBuffer(),
+      data: instructionData.serialize(),
     });
-
+    console.log("看下instructionData", instructionData.serialize());
+    console.log("11233");
     const transaction = new Transaction().add(instruction);
 
     const anyTransaction: any = transaction;
@@ -186,9 +139,9 @@ export const useContract = () => {
       console.log("ataInstruction: ", ataInstruction);
     }
 
-    const instructionData2 = new InitializeTokenMintArgs({
+    const instructionData2 = new Nft({
       methods_id: 1,
-      id: 81,
+      id: 200,
       description: data.agct,
       owner: phantom.publicKey.toBase58(),
       creator: phantom.publicKey.toBase58(),
@@ -207,9 +160,9 @@ export const useContract = () => {
         { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
       ],
       programId: new PublicKey(nftAddressV2),
-      data: instructionData2.toBuffer(),
+      data: instructionData2.serialize(),
     });
-
+    console.log("看下哈哈111", instructionData2.serialize());
     const transaction2 = tx.add(createInstruction);
 
     transaction2.feePayer = phantom.publicKey;

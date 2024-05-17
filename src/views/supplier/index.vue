@@ -2,6 +2,9 @@
   <div class="px-180px pb-60px mt-30px supplier flex-1 overflow-auto">
     <div class="flex-between">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="keyword">
+          <el-input v-model="formInline.keyword" placeholder="keyword search" clearable />
+        </el-form-item>
 
         <el-form-item label="Category">
           <el-select class="w-220px" v-model="formInline.category" placeholder="select category"
@@ -111,9 +114,10 @@ import { useWallet } from 'solana-wallets-vue'
 import { useContract } from '@/hooks/useContract'
 import { createColor, descHandle } from '@/hooks/useCreateColor'
 import _ from 'lodash'
+import { NftCoordinator } from '@/models/NftCoordinator.ts'
 
 const { publicKey } = useWallet()
-const { callContract } = useContract()
+const { callContract, transfer, getAccounts, connection } = useContract()
 const exampleFileList = ref([])
 const currentPage = ref(1)
 const pageSize = ref(10)
@@ -124,8 +128,18 @@ const dialogFormVisible = ref(false)
 const tableLoading = ref(false)
 
 onMounted(async () => {
-  setTimeout(() => {
+  setTimeout(async () => {
     if (!publicKey.value) return
+    const res = await NftCoordinator.fetchPage(
+      connection,
+      currentPage.value,
+      10,
+      formInline.keyword,
+      formInline.keyword !== ''
+    )
+    console.log('结果', res)
+    // transfer()
+    // getAccounts()
     getGenomes()
     getNFTByCreator()
   }, 500)
